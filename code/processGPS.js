@@ -27,6 +27,10 @@ module.exports = async function (
       let rejected = 0;
       const perSample = [];
       for (const sample of s.GPS9 || []) {
+        if (!sample) {
+          perSample.push(true);
+          continue;
+        }
         const fix = sample[8];
         const precision = sample[7];
         if (GPSFix != null) {
@@ -48,7 +52,7 @@ module.exports = async function (
       }
       if (rejected === s.GPS9.length) return 'all';
       if (accepted === s.GPS9.length) return false;
-      return perSample;
+      return perSample.filter(s => !!s).length;
     }
   };
 
